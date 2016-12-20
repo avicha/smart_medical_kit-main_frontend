@@ -8,7 +8,7 @@
 
 <script>
 export default {
-    name: 'index',
+    name: 'IndexPage',
     components: {
 
     },
@@ -45,4 +45,4 @@ export default {
 }
 </script>
 
-<style lang="scss">@import "../assets/scss/global.scss"</style>
+<style lang="scss">@import "~scss/global.scss"</style>
