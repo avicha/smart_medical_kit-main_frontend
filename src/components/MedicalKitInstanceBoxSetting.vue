@@ -1,0 +1,79 @@
+<template>
+<div class="medical_kit_instance_box_setting">
+    <p class="tips">扫描药盒条形码，可快速录入</P>
+    <ul class="list-group">
+        <li class="list-group-item" v-for="(box_setting, index) in box_settings">
+            <div class="medical">
+                <span class="index">{{box_setting.box_index}}.</span>
+                <input class="medical_name" v-model="box_setting.medical_name" placeholder="" />
+                <button class="scan-btn"></button>
+                <button class="schedule-btn" @click="show_schedule_times_setting(index)"></button>
+            </div>
+            <div class="schedule-info">
+                <span class="label label-info" v-for="time in box_setting.schedule_times">{{time}}</span>
+                <span class="piece_per_time">每次{{box_setting.piece_per_time}}{{box_setting.unit}}</span>
+            </div>
+        </li>
+    </ul>
+</div>
+</template>
+<script>
+import {
+    mapState
+} from 'vuex'
+export default {
+    props: ['show_schedule_times_setting'],
+    computed: {...mapState({
+            box_settings: state => state.medical_kit_instance.box_settings,
+            medical_kit_instance: state => state.medical_kit_instance.detail
+        })
+    },
+}
+</script>
+<style lang="scss">
+.tips {
+    margin: 10px 15px;
+}
+.medical {
+    padding-bottom: 5px;
+    .index {
+        padding-right: 5px;
+    }
+    .medical_name {
+        padding: 3px 6px;
+        height: 28px;
+        line-height: 28px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        border-radius: 4px;
+        width: 75%;
+        vertical-align: middle;
+    }
+    .scan-btn {
+        width: 20px;
+        height: 20px;
+        background-image: url("~images/scan.png");
+        background-size: contain;
+        vertical-align: middle;
+    }
+    .schedule-btn {
+        width: 20px;
+        height: 20px;
+        background-image: url("~images/schedule.jpg");
+        background-size: contain;
+        vertical-align: middle;
+    }
+}
+.schedule-info {
+    overflow: hidden;
+    .label {
+        margin-right: 5px;
+    }
+    .piece_per_time {
+        float: right;
+        font-size: 12px;
+        padding: 0.2em 0.6em 0.3em;
+    }
+}
+</style>

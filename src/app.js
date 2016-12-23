@@ -6,16 +6,12 @@ import BaseModel from 'api/base'
 BaseModel.api_prefix = (process.env.NODE_ENV == 'development' ? '/api' : '/api')
 import store from 'store'
 Vue.use(VueRouter)
-const Index = resolve => require(['views/Index'], resolve)
-const ProductInstanceSetting = resolve => require(['views/product_instance/Setting'], resolve)
+const MedicalKitInstanceSetting = resolve => require(['views/medical_kit_instance/Setting'], resolve)
 
 const routes = [{
-	name: 'product_instance_setting',
-	path: '/product_instance/setting',
-	component: ProductInstanceSetting
-}, {
-	path: '*',
-	component: Index
+	name: 'medical_kit_instance_setting',
+	path: '/medical_kit_instance/setting',
+	component: MedicalKitInstanceSetting
 }]
 const router = new VueRouter({
 	routes,
