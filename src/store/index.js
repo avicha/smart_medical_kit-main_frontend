@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import state from './state'
 import mutations from './mutations'
-import * as actions from './actions'
+import actions from './actions'
 import * as getters from './getters'
 import medical_kit_instance from './modules/medical_kit_instance'
 Vue.use(Vuex)
