@@ -6,7 +6,7 @@
             <div class="medical">
                 <span class="index">{{box_setting.box_index}}.</span>
                 <input class="medical_name" v-model="box_setting.medical_name" placeholder="" />
-                <button class="scan-btn"></button>
+                <button class="scan-btn" @click="scanQRCode(index)"></button>
                 <button class="schedule-btn" @click="show_schedule_times_setting(index)"></button>
             </div>
             <div class="schedule-info">
@@ -18,6 +18,7 @@
 </div>
 </template>
 <script>
+import wx from 'wx'
 import {
     mapState
 } from 'vuex'
@@ -28,6 +29,21 @@ export default {
             medical_kit_instance: state => state.medical_kit_instance.detail
         })
     },
+    methods: {
+        scanQRCode(index) {
+            wx.scanQRCode({
+                needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                scanType: ["qrCode", "barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+                success(res) {
+                    let result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+                    alert(result)
+                },
+                fail(res) {
+                    alert(res.errMsg);
+                }
+            });
+        }
+    }
 }
 </script>
 <style lang="scss">
@@ -77,3 +93,4 @@ export default {
     }
 }
 </style>
+style>
