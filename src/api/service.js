@@ -4,11 +4,7 @@ class Service extends BaseModel {
         let qs = [];
         Object.keys({}).forEach(key => qs.push(key + '=' + filter[key]));
         return fetch(this.api_prefix + '/service/get_weixin_jsapi_params?' + qs.join('&'), {
-            method: 'get',
-            headers: new Headers({
-                Accept: 'application/json',
-                'X-Requested-With': 'XMLHttpRequest'
-            })
+            method: 'get'
         }).then(res => res.json());
 	}
 }

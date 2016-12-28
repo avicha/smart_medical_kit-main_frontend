@@ -32,11 +32,7 @@ class BaseModel {
 		let qs = [];
 		Object.keys(filter).forEach(key => qs.push(key + '=' + filter[key]));
 		return fetch(this.api_prefix + '/' + this.model_name + '/list?' + qs.join('&'), {
-			method: 'get',
-			headers: new Headers({
-				Accept: 'application/json',
-				'X-Requested-With': 'XMLHttpRequest'
-			})
+			method: 'get'
 		}).then(res => res.json());
 	}
 	get() {
@@ -49,11 +45,7 @@ class BaseModel {
 		}
 		Object.keys(query).forEach(key => qs.push(key + '=' + query[key]));
 		return fetch(this.api_prefix + '/' + this.model_name + '/get?' + qs.join('&'), {
-			method: 'get',
-			headers: new Headers({
-				Accept: 'application/json',
-				'X-Requested-With': 'XMLHttpRequest'
-			})
+			method: 'get'
 		}).then(res => res.json());
 	}
 	update() {
@@ -63,8 +55,6 @@ class BaseModel {
 		return fetch(this.api_prefix + '/' + this.model_name + '/update', {
 			method: 'post',
 			headers: new Headers({
-				Accept: 'application/json',
-				'X-Requested-With': 'XMLHttpRequest',
 				'Content-Type': 'application/json; charset=UTF-8'
 			}),
 			body: JSON.stringify(attributes)
@@ -75,8 +65,6 @@ class BaseModel {
 		return fetch(this.api_prefix + '/' + this.model_name + '/create', {
 			method: 'post',
 			headers: new Headers({
-				Accept: 'application/json',
-				'X-Requested-With': 'XMLHttpRequest',
 				'Content-Type': 'application/json; charset=UTF-8'
 			}),
 			body: JSON.stringify(attributes)
@@ -100,11 +88,7 @@ class BaseModel {
 		}
 		Object.keys(query).forEach(key => qs.push(key + '=' + query[key]));
 		return fetch(this.api_prefix + '/' + this.model_name + '/delete?' + qs.join('&'), {
-			method: 'get',
-			headers: {
-				Accept: 'application/json',
-				'X-Requested-With': 'XMLHttpRequest'
-			}
+			method: 'get'
 		}).then(res => res.json());
 	}
 }
