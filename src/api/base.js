@@ -53,15 +53,11 @@ class BaseModel {
 		let attributes = this.attributes;
 		attributes[this.model_name + '_id'] = this.getId();
 		delete attributes[this.idAttribute]
-		return Vue.http.post(this.api_prefix + '/' + this.model_name + '/update', {
-			body: attributes
-		}).then(res => res.json());
+		return Vue.http.post(this.api_prefix + '/' + this.model_name + '/update', attributes).then(res => res.json());
 	}
 	create() {
 		let attributes = this.attributes;
-		return Vue.http.post(this.api_prefix + '/' + this.model_name + '/create', {
-			body: attributes
-		}).then(res => res.json());
+		return Vue.http.post(this.api_prefix + '/' + this.model_name + '/create', attributes).then(res => res.json());
 	}
 	save() {
 		let id = this.getId();
