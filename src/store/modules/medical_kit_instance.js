@@ -1,5 +1,6 @@
 import * as types from '../mutation_types'
 import MedicalKitInstanceModel from 'api/medical_kit_instance'
+import extend from 'lodash/extend'
 
 const state = {
 	detail: {
@@ -7,9 +8,11 @@ const state = {
 		product_code: '',
 		name: '',
 		image: '',
-		box_count: 0
+		box_count: 0,
+		box_settings: [],
+		setting: null
 	},
-	box_settings: []
+	box_setting_index: 0
 }
 const getters = {}
 const actions = {
@@ -36,49 +39,48 @@ const mutations = {
 		result
 	}) {
 		state.detail = result
-		state.box_settings = []
-		for (let i = 0; i < result.box_count; i++) {
-			state.box_settings.push({
-				medical_kit_instance_id: result.id,
-				box_index: i + 1,
-				medical_name: '',
-				medical_barcode: null,
-				schedule_times: [],
-				piece_per_time: 1,
-				unit: '粒'
-			})
-		}
+	},
+	[types.SET_MEDICAL_INSTANCE_BOX_SETTING_INDEX](state, {
+		index
+	}) {
+		state.box_setting_index = index
 	},
 	[types.REMOVE_MEDICAL_INSTANCE_BOX_SCHEDULE_TIME](state, {
 		index,
 		time
 	}) {
-		let i = state.box_settings[index].schedule_times.indexOf(time)
+		let i = state.detail.box_settings[index].schedule_times.indexOf(time)
 		if (~i) {
-			state.box_settings[index].schedule_times.splice(i, 1)
+			state.detail.box_settings[index].schedule_times.splice(i, 1)
 		}
 	},
 	[types.ADD_MEDICAL_INSTANCE_BOX_SCHEDULE_TIME](state, {
 		index,
 		time
 	}) {
-		let i = state.box_settings[index].schedule_times.indexOf(time)
+		let i = state.detail.box_settings[index].schedule_times.indexOf(time)
 		if (!~i) {
-			state.box_settings[index].schedule_times.push(time)
-			state.box_settings[index].schedule_times.sort()
+			state.detail.box_settings[index].schedule_times.push(time)
+			state.detail.box_settings[index].schedule_times.sort()
 		}
 	},
 	[types.ADD_MEDICAL_INSTANCE_BOX_PIECE_PER_TIME](state, {
 		index
 	}) {
-		state.box_settings[index].piece_per_time++
+		state.detail.box_settings[index].piece_per_time++
 	},
 	[types.MINUS_MEDICAL_INSTANCE_BOX_PIECE_PER_TIME](state, {
 		index
 	}) {
-		if (state.box_settings[index].piece_per_time > 1) {
-			state.box_settings[index].piece_per_time--
+		if (state.detail.box_settings[index].piece_per_time > 1) {
+			state.detail.box_settings[index].piece_per_time--
 		}
+	},
+	[types.SET_MEDICAL_INSTANCE_BOX_MEDICAL](state, {
+		index,
+		medical
+	}) {
+		extend(state.detail.box_settings[index], medical)
 	}
 }
 export default {

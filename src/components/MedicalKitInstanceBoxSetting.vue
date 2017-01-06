@@ -22,10 +22,11 @@ import wx from 'wx'
 import {
     mapState
 } from 'vuex'
+import * as types from 'store/mutation_types'
 export default {
     props: ['show_schedule_times_setting'],
-    computed: {...mapState({
-            box_settings: state => state.medical_kit_instance.box_settings,
+    computed: { ...mapState({
+            box_settings: state => state.medical_kit_instance.detail.box_settings,
             medical_kit_instance: state => state.medical_kit_instance.detail
         })
     },
@@ -36,7 +37,23 @@ export default {
                 scanType: ["qrCode", "barCode"], // 可以指定扫二维码还是一维码，默认二者都有
                 success(res) {
                     let result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
-                    alert(result)
+                    let barcode = result.split(',')[1]
+                    this.$store.dispatch('medical_scan', {
+                        barcode
+                    }).then(({
+                        errcode,
+                        result
+                    }) => {
+                        if (!errcode) {
+                            this.$store.commit(types.SET_MEDICAL_INSTANCE_BOX_MEDICAL, {
+                                index: index,
+                                medical: {
+                                    medical_name: result.name,
+                                    medical_barcode: result.barcode
+                                }
+                            })
+                        }
+                    })
                 },
                 fail(res) {
                     alert(res.errMsg);

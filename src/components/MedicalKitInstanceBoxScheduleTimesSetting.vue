@@ -5,13 +5,13 @@
         <div class="period" v-for="period in periods">
             <p class="period-text">{{period.name}}：</p>
             <div class="period_times">
-                <span class="label label-default" v-bind:class="{selected: include_time(time)}" v-for="time in period.times" @click="toggle_time(time)">{{time}}</span>
+                <span class="label label-default" v-bind:class="{selected: is_include_time(time)}" v-for="time in period.times" @click="toggle_time(time)">{{time}}</span>
             </div>
         </div>
     </div>
     <div class="footer">
         <div class="piece-container">
-            每次<em class="minus" @click="minus_piece()">﹣</em>{{box_settings[box_setting_index] && box_settings[box_setting_index].piece_per_time || 1}}<em class="plus" @click="add_piece()">﹢</em><span class="unit">粒</span>
+            每次<em class="minus" @click="minus_piece()">﹣</em>{{box_settings[box_setting_index] && box_settings[box_setting_index].piece_per_time}}<em class="plus" @click="add_piece()">﹢</em><span class="unit">{{box_settings[box_setting_index] && box_settings[box_setting_index].unit}}</span>
         </div>
         <div class="btn submit-btn" @click="hide_schedule_times_setting">确定</div>
     </div>
@@ -26,7 +26,6 @@ export default {
     props: ['hide_schedule_times_setting'],
     data() {
         return {
-            box_setting_index: 0,
             periods: [{
                 name: '早上',
                 times: ['07:00', '07:30', '08:00', '08:30', '09:00', '09:30', '10:00']
@@ -44,16 +43,17 @@ export default {
     },
     computed: {
         ...mapState({
-            box_settings: state => state.medical_kit_instance.box_settings,
+            box_settings: state => state.medical_kit_instance.detail.box_settings,
+            box_setting_index: state => state.medical_kit_instance.box_setting_index
         })
     },
     methods: {
-        include_time(time) {
+        is_include_time(time) {
             let box_setting = this.box_settings[this.box_setting_index]
             return box_setting && ~box_setting.schedule_times.indexOf(time)
         },
         toggle_time(time) {
-            if (this.include_time(time)) {
+            if (this.is_include_time(time)) {
                 this.$store.commit(types.REMOVE_MEDICAL_INSTANCE_BOX_SCHEDULE_TIME, {
                     index: this.box_setting_index,
                     time: time
