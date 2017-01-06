@@ -32,62 +32,61 @@ export default {
     },
     methods: {
         scanQRCode(index) {
-            this.$store.dispatch('medical_scan', {
-                barcode: '6953460846432'
-            }).then(({
-                errcode,
-                result
-            }) => {
-                let piece_per_time = 1
-                let unit = '粒'
-                let schedule_times = []
-                if (!errcode) {
-                    if (/一次[^，]*?\d+[粒,片,丸,袋,支,包,贴,毫升,毫克,mg]/.test(result.amount_desc)) {
-                        piece_per_time = window.parseInt(result.amount_desc.match(/一次[^，]*?(\d+)[粒,片,丸,袋,支,包,贴,毫升,毫克,mg]/)[1])
-                        let units = ['粒', '片', '丸', '袋', '支', '包', '贴', '毫升', '毫克', 'mg']
-                        for (let i = 0, l = units.length; i < l; i++) {
-                            if (~result.amount_desc.indexOf(units[i])) {
-                                unit = units[i]
-                                break;
-                            }
-                        }
-                    }
-                    if (/日[^，]*?(\d+)次/.test(result.amount_desc)) {
-                        let times_per_day = window.parseInt(result.amount_desc.match(/日[^，]*?(\d+)次/)[1])
-                        switch (times_per_day) {
-                            case 1:
-                                schedule_times = ['08:00'];
-                                break;
-                            case 2:
-                                schedule_times = ['08:00', '20:00'];
-                                break;
-                            case 3:
-                                schedule_times = ['08:00', '14:00', '20:00'];
-                                break;
-                            case 4:
-                                schedule_times = ['08:00', '12:00', '16:00', '20:00'];
-                                break;
-                        }
-                    }
-                    this.$store.commit(types.SET_MEDICAL_INSTANCE_BOX_MEDICAL, {
-                        index: index,
-                        medical: {
-                            medical_name: result.name,
-                            medical_barcode: result.barcode,
-                            schedule_times: schedule_times,
-                            piece_per_time: piece_per_time,
-                            unit: unit
-                        }
-                    })
-                }
-            })
             wx.scanQRCode({
                 needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
                 scanType: ["qrCode", "barCode"], // 可以指定扫二维码还是一维码，默认二者都有
                 success: res => {
                     let result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
                     let barcode = result.split(',')[1]
-
+                    this.$store.dispatch('medical_scan', {
+                        barcode
+                    }).then(({
+                        errcode,
+                        result
+                    }) => {
+                        let piece_per_time = 1
+                        let unit = '粒'
+                        let schedule_times = []
+                        if (!errcode) {
+                            if (/一次[^，]*?\d+[粒,片,丸,袋,支,包,贴,毫升,毫克,mg]/.test(result.amount_desc)) {
+                                piece_per_time = window.parseInt(result.amount_desc.match(/一次[^，]*?(\d+)[粒,片,丸,袋,支,包,贴,毫升,毫克,mg]/)[1])
+                                let units = ['粒', '片', '丸', '袋', '支', '包', '贴', '毫升', '毫克', 'mg']
+                                for (let i = 0, l = units.length; i < l; i++) {
+                                    if (~result.amount_desc.indexOf(units[i])) {
+                                        unit = units[i]
+                                        break;
+                                    }
+                                }
+                            }
+                            if (/日[^，]*?(\d+)次/.test(result.amount_desc)) {
+                                let times_per_day = window.parseInt(result.amount_desc.match(/日[^，]*?(\d+)次/)[1])
+                                switch (times_per_day) {
+                                    case 1:
+                                        schedule_times = ['08:00'];
+                                        break;
+                                    case 2:
+                                        schedule_times = ['08:00', '20:00'];
+                                        break;
+                                    case 3:
+                                        schedule_times = ['08:00', '14:00', '20:00'];
+                                        break;
+                                    case 4:
+                                        schedule_times = ['08:00', '12:00', '16:00', '20:00'];
+                                        break;
+                                }
+                            }
+                            this.$store.commit(types.SET_MEDICAL_INSTANCE_BOX_MEDICAL, {
+                                index: index,
+                                medical: {
+                                    medical_name: result.name,
+                                    medical_barcode: result.barcode,
+                                    schedule_times: schedule_times,
+                                    piece_per_time: piece_per_time,
+                                    unit: unit
+                                }
+                            })
+                        }
+                    })
                 },
                 fail: res => {
                     alert(res.errMsg);
