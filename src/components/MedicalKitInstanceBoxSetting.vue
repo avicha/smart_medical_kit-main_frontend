@@ -48,9 +48,15 @@ export default {
                         let unit = '粒'
                         let schedule_times = []
                         if (!errcode) {
-                            if (/一次[^，]*?\d+[粒,片,丸,袋,支,包]/.test(result.amount_desc)) {
-                                piece_per_time = window.parseInt(result.amount_desc.match(/一次[^，]*?(\d+)[粒,片,丸,袋,支,包]/)[1])
-                                unit = result.amount_desc.match(/一次[^，]*?\d+([粒,片,丸,袋,支,包])/)[1]
+                            if (/一次[^，]*?\d+[粒,片,丸,袋,支,包,贴,毫升,毫克,mg]/.test(result.amount_desc)) {
+                                piece_per_time = window.parseInt(result.amount_desc.match(/一次[^，]*?(\d+)[粒,片,丸,袋,支,包,贴,毫升,毫克,mg]/)[1])
+                                let units = ['粒', '片', '丸', '袋', '支', '包', '贴', '毫升', '毫克', 'mg']
+                                for (let i = 0, l = units.length; i < l; i++) {
+                                    if (~amount_desc.indexOf(units[i])) {
+                                        unit = units[i]
+                                        break;
+                                    }
+                                }
                             }
                             if (/日[^，]*?(\d+)次/.test(result.amount_desc)) {
                                 let times_per_day = window.parseInt(result.amount_desc.match(/日[^，]*?(\d+)次/)[1])
