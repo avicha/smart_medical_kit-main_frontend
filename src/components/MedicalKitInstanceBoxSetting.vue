@@ -45,12 +45,43 @@ export default {
                         result
                     }) => {
                         if (!errcode) {
+                            if (/一次[^，]*?\d+[粒,片,丸,袋,支,包]/.test(result.amount_desc)) {
+                                let piece_per_time = result.amount_desc.match(/一次[^，]*?(\d+)[粒,片,丸,袋,支,包]/)[1]
+                                let unit = result.amount_desc.match(/一次[^，]*?\d+([粒,片,丸,袋,支,包])/)[1]
+                            } else {
+                                let piece_per_time = 1
+                                let unit = '粒'
+                            }
+                            if (/每日[^，]*?(\d+)次/.test(result.amount_desc)) {
+                                let times_per_day = window.parseInt(result.amount_desc.match(/每日[^，]*?(\d+)次/)[1])
+                                let schedule_times = []
+                                switch (times_per_day) {
+                                    case 1:
+                                        schedule_times = ['08:00'];
+                                        break;
+                                    case 2:
+                                        schedule_times = ['08:00', '20:00'];
+                                        break;
+                                    case 3:
+                                        schedule_times = ['08:00', '14:00', '20:00'];
+                                        break;
+                                    case 4:
+                                        schedule_times = ['08:00', '12:00', '16:00', '20:00'];
+                                        break;
+                                }
+                            } else {
+                                let schedule_times = []
+                            }
                             this.$store.commit(types.SET_MEDICAL_INSTANCE_BOX_MEDICAL, {
                                 index: index,
                                 medical: {
                                     medical_name: result.name,
-                                    medical_barcode: result.barcode
-                                }
+                                    medical_barcode: result.barcode,
+                                    schedule_times: schedule_times,
+                                    piece_per_time: piece_per_time,
+                                    unit: unit
+                                },
+                                times_per_day: times_per_day
                             })
                         }
                     })

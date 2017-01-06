@@ -78,7 +78,7 @@ const mutations = {
 	},
 	[types.SET_MEDICAL_INSTANCE_BOX_MEDICAL](state, {
 		index,
-		medical
+		medical,
 	}) {
 		extend(state.detail.box_settings[index], medical)
 	}
