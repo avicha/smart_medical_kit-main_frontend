@@ -103,7 +103,7 @@ export default {
                     success: res => {
                         let result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
                         let barcode = result.split(',')[1]
-                        this.get_medical_by_barcode(index, barCode)
+                        this.get_medical_by_barcode(index, barcode)
                     },
                     fail: res => {
                         alert(res.errMsg);
