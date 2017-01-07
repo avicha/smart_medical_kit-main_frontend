@@ -1,19 +1,14 @@
 <template>
-<div class="schedule_times">
+<div class="container">
     <h4 class="title">请选择提醒时间</h4>
-    <div class="periods">
-        <div class="period" v-for="period in periods">
-            <p class="period-text">{{period.name}}：</p>
-            <div class="period_times">
-                <span class="label label-default" v-bind:class="{selected: is_include_time(time)}" v-for="time in period.times" @click="toggle_time(time)">{{time}}</span>
-            </div>
-        </div>
+    <div class="period_times">
+        <span class="label label-default" v-bind:class="{selected: is_include_time(time)}" v-for="time in schedule_times" @click="toggle_time(time)">{{time}}</span>
     </div>
     <div class="footer">
         <div class="piece-container">
             每次<em class="minus" @click="minus_piece()">﹣</em>{{box_settings[box_setting_index] && box_settings[box_setting_index].piece_per_time}}<em class="plus" @click="add_piece()">﹢</em><span class="unit">{{box_settings[box_setting_index] && box_settings[box_setting_index].unit}}</span>
         </div>
-        <div class="btn submit-btn" @click="hide_schedule_times_setting">确定</div>
+        <div class="btn submit-btn" @click="hide_box_schedule_times_setting_popup">确定</div>
     </div>
 </div>
 </template>
@@ -23,26 +18,10 @@ import {
 } from 'vuex'
 import * as types from 'store/mutation_types'
 export default {
-    props: ['hide_schedule_times_setting'],
-    data() {
-        return {
-            periods: [{
-                name: '早上',
-                times: ['07:00', '07:30', '08:00', '08:30', '09:00', '09:30', '10:00']
-            }, {
-                name: '中午',
-                times: ['11:00', '11:30', '12:00', '12:30', '13:00']
-            }, {
-                name: '下午',
-                times: ['16:00', '16:30', '17:00', '17:30', '18:00']
-            }, {
-                name: '晚上',
-                times: ['19:00', '19:30', '20:00', '20:30', '21:00', '21:30', '22:00']
-            }, ]
-        }
-    },
+    props: ['hide_box_schedule_times_setting_popup'],
     computed: {
         ...mapState({
+            schedule_times: state => state.medical_kit_instance.schedule_times,
             box_settings: state => state.medical_kit_instance.detail.box_settings,
             box_setting_index: state => state.medical_kit_instance.box_setting_index
         })
@@ -78,30 +57,23 @@ export default {
     }
 }
 </script>
-<style lang="scss">
-.schedule_times {
+<style lang="scss" scoped>
+.container {
     background-color: #fff;
-    .label {
-        margin-right: 5px;
-    }
     .title {
         text-align: center;
         font-weight: normal;
         padding: 12px 0;
     }
-    .periods {
-        .period {
-            border-bottom: 1px solid #ccc;
-            padding: 0 5px 15px;
-            .period-text {
-                margin: 8px 0;
-            }
-            .period_times {
-                .label.selected {
-                    color: #fff;
-                    background-color: #5bc0de;
-                }
-            }
+    .period_times {
+        border-bottom: 1px solid #ccc;
+        padding: 0 5px 15px;
+        .label {
+            margin-right: 5px;
+        }
+        .label.selected {
+            color: #fff;
+            background-color: #5bc0de;
         }
     }
     .footer {

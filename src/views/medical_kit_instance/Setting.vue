@@ -1,10 +1,14 @@
 <template>
 <div id="root">
     <MedicalKitInstanceInfoHeader />
-    <MedicalKitInstanceBoxSetting :show_schedule_times_setting="show_schedule_times_setting" v-show="!is_schedule_times_setting_shown" />
-    <YiMask v-show="is_schedule_times_setting_shown" />
-    <MedicalKitInstanceBoxScheduleTimesSetting v-show="is_schedule_times_setting_shown" ref="medical_kit_instance_schedule_times_setting" :hide_schedule_times_setting="hide_schedule_times_setting" />
-    <button class="btn set-btn" v-show="!is_schedule_times_setting_shown">设置</button>
+    <div class="medical_kit_instance_setting">
+        <MedicalKitInstanceScheduleTimesSettingPanel :show_schedule_times_setting_popup="show_schedule_times_setting_popup" />
+        <MedicalKitInstanceBoxSettingPanel :show_box_schedule_times_setting_popup="show_box_schedule_times_setting_popup" />
+    </div>
+    <YiMask v-show="is_schedule_times_setting_popup_shown || is_box_schedule_times_setting_popup_shown" />
+    <MedicalKitInstanceScheduleTimesSettingPopup class="schedule_times_popup" v-show="is_schedule_times_setting_popup_shown" :hide_schedule_times_setting_popup="hide_schedule_times_setting_popup" />
+    <MedicalKitInstanceBoxScheduleTimesSettingPopup class="schedule_times_popup" v-show="is_box_schedule_times_setting_popup_shown" :hide_box_schedule_times_setting_popup="hide_box_schedule_times_setting_popup" />
+    <button class="btn set-btn" v-show="!is_schedule_times_setting_popup_shown && !is_box_schedule_times_setting_popup_shown">设置</button>
 </div>
 </template>
 
@@ -12,21 +16,26 @@
 import Vue from 'vue'
 import wx from 'wx'
 import MedicalKitInstanceInfoHeader from 'components/MedicalKitInstanceInfoHeader'
-import MedicalKitInstanceBoxSetting from 'components/MedicalKitInstanceBoxSetting'
+import MedicalKitInstanceScheduleTimesSettingPanel from 'components/MedicalKitInstanceScheduleTimesSettingPanel'
+import MedicalKitInstanceBoxSettingPanel from 'components/MedicalKitInstanceBoxSettingPanel'
 import YiMask from 'components/Mask'
-import MedicalKitInstanceBoxScheduleTimesSetting from 'components/MedicalKitInstanceBoxScheduleTimesSetting'
+import MedicalKitInstanceScheduleTimesSettingPopup from 'components/MedicalKitInstanceScheduleTimesSettingPopup'
+import MedicalKitInstanceBoxScheduleTimesSettingPopup from 'components/MedicalKitInstanceBoxScheduleTimesSettingPopup'
 import * as types from 'store/mutation_types'
 export default {
     name: 'MedicalKitInstanceSettingPage',
     components: {
         MedicalKitInstanceInfoHeader,
-        MedicalKitInstanceBoxSetting,
+        MedicalKitInstanceScheduleTimesSettingPanel,
+        MedicalKitInstanceBoxSettingPanel,
         YiMask,
-        MedicalKitInstanceBoxScheduleTimesSetting
+        MedicalKitInstanceScheduleTimesSettingPopup,
+        MedicalKitInstanceBoxScheduleTimesSettingPopup
     },
     data() {
         return {
-            is_schedule_times_setting_shown: false
+            is_schedule_times_setting_popup_shown: false,
+            is_box_schedule_times_setting_popup_shown: false
         }
     },
     mounted() {
@@ -57,14 +66,20 @@ export default {
         })
     },
     methods: {
-        show_schedule_times_setting(index) {
-            this.is_schedule_times_setting_shown = true
-            this.$store.commit(types.SET_MEDICAL_INSTANCE_BOX_SETTING_INDEX, {
-                index: index
-            })
+        show_schedule_times_setting_popup() {
+            this.is_schedule_times_setting_popup_shown = true
         },
-        hide_schedule_times_setting() {
-            this.is_schedule_times_setting_shown = false
+        hide_schedule_times_setting_popup() {
+            this.is_schedule_times_setting_popup_shown = false
+        },
+        show_box_schedule_times_setting_popup(index) {
+            this.$store.commit(types.SET_MEDICAL_INSTANCE_BOX_SETTING_INDEX, {
+                index
+            })
+            this.is_box_schedule_times_setting_popup_shown = true
+        },
+        hide_box_schedule_times_setting_popup() {
+            this.is_box_schedule_times_setting_popup_shown = false
         }
     }
 }
@@ -73,11 +88,11 @@ export default {
 #root {
     padding: 5px;
 }
-.medical_kit_instance_box_setting {
+.medical_kit_instance_setting {
     padding-bottom: 20px;
     margin-bottom: 36px;
 }
-.schedule_times {
+.schedule_times_popup {
     @extend .bottom-fixed;
     z-index: 100;
 }

@@ -9,16 +9,24 @@ Vue.use(VueRouter)
 const MedicalKitInstanceSetting = resolve => require(['views/medical_kit_instance/Setting'], resolve)
 
 const routes = [{
-	name: 'medical_kit_instance_setting',
-	path: '/medical_kit_instance/setting',
-	component: MedicalKitInstanceSetting
+    name: 'medical_kit_instance_setting',
+    path: '/medical_kit_instance/setting',
+    component: MedicalKitInstanceSetting
 }]
 const router = new VueRouter({
-	routes,
-	mode: 'history',
-	linkActiveClass: 'active'
+    routes,
+    mode: 'history',
+    linkActiveClass: 'active'
+})
+Vue.filter('map_period', function(time, periods) {
+    for (let i = 0, l = periods.length; i < l; i++) {
+        let period = periods[i]
+        if (~period.times.indexOf(time)) {
+            return period.name;
+        }
+    }
 })
 const app = new Vue({
-	router,
-	store
+    router,
+    store
 }).$mount('#app')

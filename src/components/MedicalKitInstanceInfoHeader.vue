@@ -1,7 +1,7 @@
 <template>
 <header>
     <h4 class="name">{{medical_kit_instance.name}}</h4>
-    <img class="image" src="~images/default_medical_kit_image.png" :title="medical_kit_instance.name" />
+    <img class="image" src="~images/default_medical_kit_image.jpg" :title="medical_kit_instance.name" />
 </header>
 </template>
 <script>
