@@ -30,79 +30,89 @@ import compact from 'lodash/compact'
 export default {
     props: ['show_box_schedule_times_setting_popup'],
     computed: { ...mapState({
-            schedule_times: state => state.schedule_times,
+            schedule_times: state => state.medical_kit_instance.schedule_times,
             periods: state => state.periods,
             box_settings: state => state.medical_kit_instance.detail.box_settings,
         })
     },
     methods: {
-        scanQRCode(index) {
-            wx.scanQRCode({
-                needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
-                scanType: ["qrCode", "barCode"], // 可以指定扫二维码还是一维码，默认二者都有
-                success: res => {
-                    let result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
-                    let barcode = result.split(',')[1]
-                    this.$store.dispatch('medical_scan', {
-                        barcode
-                    }).then(({
-                        errcode,
-                        result
-                    }) => {
-                        if (!errcode) {
-                            let piece_per_time = 1
-                            let unit = '粒'
-                            let schedule_times = []
-                            let box_setting = this.box_settings[index]
-                            if (/次[^，]*?\d+[粒,片,丸,袋,支,包,贴,毫升,毫克,mg]/.test(result.amount_desc)) {
-                                piece_per_time = window.parseInt(result.amount_desc.match(/次[^，]*?(\d+)[粒,片,丸,袋,支,包,贴,毫升,毫克,mg]/)[1])
-                                let units = ['粒', '片', '丸', '袋', '支', '包', '贴', '毫升', '毫克', 'mg']
-                                for (let i = 0, l = units.length; i < l; i++) {
-                                    if (~result.amount_desc.indexOf(units[i])) {
-                                        unit = units[i]
-                                        break;
-                                    }
-                                }
+        get_medical_by_barcode(index, barcode) {
+            this.$store.dispatch('medical_scan', {
+                barcode
+            }).then(({
+                errcode,
+                result
+            }) => {
+                if (!errcode) {
+                    let piece_per_time = 1
+                    let unit = '粒'
+                    let schedule_times = []
+                    let box_setting = this.box_settings[index]
+                    if (/次[^，]*?\d+[粒,片,丸,袋,支,包,贴,毫升,毫克,mg]/.test(result.amount_desc)) {
+                        piece_per_time = window.parseInt(result.amount_desc.match(/次[^，]*?(\d+)[粒,片,丸,袋,支,包,贴,毫升,毫克,mg]/)[1])
+                        let units = ['粒', '片', '丸', '袋', '支', '包', '贴', '毫升', '毫克', 'mg']
+                        for (let i = 0, l = units.length; i < l; i++) {
+                            if (~result.amount_desc.indexOf(units[i])) {
+                                unit = units[i]
+                                break;
                             }
-                            if (/日[^，]*?(\d+)次/.test(result.amount_desc)) {
-                                let times_per_day = window.parseInt(result.amount_desc.match(/日[^，]*?(\d+)次/)[1])
-                                switch (times_per_day) {
-                                    case 1:
-                                        //一日一次
-                                        schedule_times = compact([first(this.schedule_times)])
-                                        break;
-                                    case 2:
-                                        //一日两次
-                                        schedule_times = compact([first(this.schedule_times), last(this.schedule_times)])
-                                        break;
-                                    case 3:
-                                        schedule_times = slice(clone(this.schedule_times), 0, 3)
-                                        break;
-                                    case 4:
-                                        schedule_times = slice(clone(this.schedule_times), 0, 4)
-                                        break;
-                                }
-                            }
-                            let medical = {
-                                medical_name: result.name,
-                                medical_barcode: result.barcode,
-                                unit: unit
-                            }
-                            if (window.confirm('药品《' + result.name + '》的服用时间为：' + schedule_times.toString() + '，每次' + piece_per_time + unit + '，是否确认？')) {
-                                medical.schedule_times = schedule_times
-                                medical.piece_per_time = piece_per_time
-                            }
-                            this.$store.commit(types.SET_MEDICAL_INSTANCE_BOX_MEDICAL, {
-                                index,
-                                medical
-                            })
                         }
+                    }
+                    if (/日[^，]*?(\d+)次/.test(result.amount_desc)) {
+                        let times_per_day = window.parseInt(result.amount_desc.match(/日[^，]*?(\d+)次/)[1])
+                        switch (times_per_day) {
+                            case 1:
+                                //一日一次
+                                schedule_times = compact([first(this.schedule_times)])
+                                break;
+                            case 2:
+                                //一日两次
+                                schedule_times = compact([first(this.schedule_times), last(this.schedule_times)])
+                                break;
+                            case 3:
+                                schedule_times = slice(this.schedule_times, 0, 3)
+                                break;
+                            case 4:
+                                schedule_times = slice(this.schedule_times, 0, 4)
+                                break;
+                        }
+                    }
+                    let medical = {
+                        medical_name: result.name,
+                        medical_barcode: result.barcode,
+                        unit: unit
+                    }
+                    if (window.confirm('药品《' + result.name + '》的服用时间为：\n' + schedule_times.join('  ') + '，每次' + piece_per_time + unit + '，是否确认？')) {
+                        medical.schedule_times = schedule_times
+                        medical.piece_per_time = piece_per_time
+                    }
+                    this.$store.commit(types.SET_MEDICAL_INSTANCE_BOX_MEDICAL, {
+                        index,
+                        medical
                     })
-                },
-                fail: res => {
-                    alert(res.errMsg);
                 }
-            });
+            })
+        },
+        scanQRCode(index) {
+            let ua = navigator.userAgent.toLowerCase()
+            let is_weixin_browser = ua.indexOf('micromessenger') != -1
+            if (is_weixin_browser) {
+                wx.scanQRCode({
+                    needResult: 1, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                    scanType: ["qrCode", "barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+                    success: res => {
+                        let result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+                        let barcode = result.split(',')[1]
+                        this.get_medical_by_barcode(index, barCode)
+                    },
+                    fail: res => {
+                        alert(res.errMsg);
+                    }
+                });
+            } else {
+                //仅供测试
+                this.get_medical_by_barcode(index, '6953460846432')
+            }
         }
     }
 }

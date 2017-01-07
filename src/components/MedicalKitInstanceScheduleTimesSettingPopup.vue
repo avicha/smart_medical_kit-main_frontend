@@ -56,13 +56,14 @@ export default {
     .periods {
         .period {
             border-bottom: 1px solid #ccc;
-            padding: 0 5px 15px;
+            padding: 5px;
             .period-text {
                 margin: 8px 0;
             }
             .period_times {
                 .label {
                     margin-right: 5px;
+                    margin-bottom: 8px;
                 }
                 .label.selected {
                     color: #fff;
