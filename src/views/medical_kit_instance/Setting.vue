@@ -6,8 +6,12 @@
         <MedicalKitInstanceBoxSettingPanel :show_box_schedule_times_setting_popup="show_box_schedule_times_setting_popup" />
     </div>
     <YiMask v-show="is_schedule_times_setting_popup_shown || is_box_schedule_times_setting_popup_shown" />
-    <MedicalKitInstanceScheduleTimesSettingPopup class="schedule_times_popup" v-show="is_schedule_times_setting_popup_shown" :hide_schedule_times_setting_popup="hide_schedule_times_setting_popup" />
-    <MedicalKitInstanceBoxScheduleTimesSettingPopup class="schedule_times_popup" v-show="is_box_schedule_times_setting_popup_shown" :hide_box_schedule_times_setting_popup="hide_box_schedule_times_setting_popup" />
+    <transition name="slideup">
+        <MedicalKitInstanceScheduleTimesSettingPopup class="schedule_times_popup" v-show="is_schedule_times_setting_popup_shown" :hide_schedule_times_setting_popup="hide_schedule_times_setting_popup" />
+    </transition>
+    <transition name="slideup">
+        <MedicalKitInstanceBoxScheduleTimesSettingPopup class="schedule_times_popup" v-show="is_box_schedule_times_setting_popup_shown" :hide_box_schedule_times_setting_popup="hide_box_schedule_times_setting_popup" />
+    </transition>
     <button class="btn set-btn" v-show="!is_schedule_times_setting_popup_shown && !is_box_schedule_times_setting_popup_shown">设置</button>
 </div>
 </template>
@@ -95,6 +99,14 @@ export default {
 .schedule_times_popup {
     @extend .bottom-fixed;
     z-index: 100;
+}
+.slideup-enter-active,
+.slideup-leave-active {
+    transition: transform 0.5s ease-in-out;
+}
+.slideup-enter,
+.slideup-leave-active {
+    transform: translateY(100%);
 }
 .set-btn {
     @extend .bottom-fixed;

@@ -68,6 +68,7 @@ export default {
     .period_times {
         border-bottom: 1px solid #ccc;
         padding: 0 5px 15px;
+        min-height: 120px;
         .label {
             margin-right: 5px;
         }
