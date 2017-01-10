@@ -13,12 +13,15 @@
     <transition name="slideup">
         <MedicalKitInstanceBoxScheduleTimesSettingPopup class="schedule_times_popup" v-show="is_box_schedule_times_setting_popup_shown" :hide_box_schedule_times_setting_popup="hide_box_schedule_times_setting_popup" />
     </transition>
-    <button class="btn set-btn" v-show="!is_schedule_times_setting_popup_shown && !is_box_schedule_times_setting_popup_shown">设置</button>
+    <button class="btn save-btn" v-show="!is_schedule_times_setting_popup_shown && !is_box_schedule_times_setting_popup_shown" @click="save_setting">设置</button>
 </div>
 </template>
 
 <script>
 import Vue from 'vue'
+import {
+    mapState
+} from 'vuex'
 import wx from 'wx'
 import MedicalKitInstanceInfoHeader from 'components/MedicalKitInstanceInfoHeader'
 import MedicalKitInstanceScheduleTimesSettingPanel from 'components/MedicalKitInstanceScheduleTimesSettingPanel'
@@ -44,6 +47,11 @@ export default {
             is_schedule_times_setting_popup_shown: false,
             is_box_schedule_times_setting_popup_shown: false
         }
+    },
+    computed: { ...mapState({
+            setting: state => state.medical_kit_instance.detail.setting,
+            box_settings: state => state.medical_kit_instance.detail.box_settings,
+        })
     },
     mounted() {
         this.$store.dispatch('medical_kit_instance_detail', {
@@ -87,6 +95,34 @@ export default {
         },
         hide_box_schedule_times_setting_popup() {
             this.is_box_schedule_times_setting_popup_shown = false
+        },
+        request_save_setting() {
+
+        },
+        save_setting() {
+            if (this.setting) {
+                let tmp = this.setting.prompt_sound.split(' ')
+                let type = tmp[0].trim()
+                let content = tmp[1].trim()
+                switch (type) {
+                    case 'local':
+                        wx.uploadVoice({
+                            localId: content, // 需要上传的音频的本地ID，由stopRecord接口获得
+                            isShowProgressTips: 1, // 默认为1，显示进度提示
+                            success: (res) => {
+                                let serverId = res.serverId // 返回音频的服务器端ID
+                            }
+                        })
+                        break
+                    default:
+                        this.request_save_setting()
+                }
+            } else {
+                this.setting = {
+                    prompt_sound: 'text 吃药啦'
+                }
+                this.request_save_setting()
+            }
         }
     }
 }
