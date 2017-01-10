@@ -3,6 +3,7 @@
     <MedicalKitInstanceInfoHeader />
     <div class="medical_kit_instance_setting">
         <MedicalKitInstanceScheduleTimesSettingPanel :show_schedule_times_setting_popup="show_schedule_times_setting_popup" />
+        <MedicalKitInstancePromptSoundSettingPanel />
         <MedicalKitInstanceBoxSettingPanel :show_box_schedule_times_setting_popup="show_box_schedule_times_setting_popup" />
     </div>
     <YiMask v-show="is_schedule_times_setting_popup_shown || is_box_schedule_times_setting_popup_shown" />
@@ -21,6 +22,7 @@ import Vue from 'vue'
 import wx from 'wx'
 import MedicalKitInstanceInfoHeader from 'components/MedicalKitInstanceInfoHeader'
 import MedicalKitInstanceScheduleTimesSettingPanel from 'components/MedicalKitInstanceScheduleTimesSettingPanel'
+import MedicalKitInstancePromptSoundSettingPanel from 'components/MedicalKitInstancePromptSoundSettingPanel'
 import MedicalKitInstanceBoxSettingPanel from 'components/MedicalKitInstanceBoxSettingPanel'
 import YiMask from 'components/Mask'
 import MedicalKitInstanceScheduleTimesSettingPopup from 'components/MedicalKitInstanceScheduleTimesSettingPopup'
@@ -31,6 +33,7 @@ export default {
     components: {
         MedicalKitInstanceInfoHeader,
         MedicalKitInstanceScheduleTimesSettingPanel,
+        MedicalKitInstancePromptSoundSettingPanel,
         MedicalKitInstanceBoxSettingPanel,
         YiMask,
         MedicalKitInstanceScheduleTimesSettingPopup,
@@ -57,7 +60,7 @@ export default {
                     timestamp: result.timestamp, // 必填，生成签名的时间戳
                     nonceStr: result.nonceStr, // 必填，生成签名的随机串
                     signature: result.signature, // 必填，签名，见附录1
-                    jsApiList: ['scanQRCode'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+                    jsApiList: ['scanQRCode', 'startRecord', 'stopRecord', 'playVoice', 'uploadVoice'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
                 });
                 wx.ready(() => {
                     // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，所以如果需要在页面加载时就调用相关接口，则须把相关接口放在ready函数中调用来确保正确执行。对于用户触发时才调用的接口，则可以直接调用，不需要放在ready函数中。
