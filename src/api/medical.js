@@ -7,7 +7,7 @@ class MedicalModel extends BaseModel {
 	static scan(barcode) {
 		return BaseModel.http.get(this.api_prefix + '/' + this.model_name + '/scan', {
 			params: {
-				barcode: barcode
+				barcode
 			}
 		}).then(res => res.json());
 	}

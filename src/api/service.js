@@ -1,10 +1,14 @@
 import BaseModel from './base';
 class Service extends BaseModel {
-	static get_weixin_jsapi_params() {
+    static get_weixin_jsapi_params() {
         return BaseModel.http.get(this.api_prefix + '/service/get_weixin_jsapi_params').then(res => res.json());
-	}
-	static download_weixin_media(media_id){
-		return BaseModel.http.get(this.api_prefix + '/service/download_weixin_media').then(res => res.json());
-	}
+    }
+    static download_weixin_media(media_id) {
+        return BaseModel.http.get(this.api_prefix + '/service/download_weixin_media', {
+            params: {
+                media_id
+            }
+        }).then(res => res.json());
+    }
 }
 export default Service
