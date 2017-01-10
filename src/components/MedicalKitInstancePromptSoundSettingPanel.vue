@@ -3,7 +3,7 @@
     <p class="tips">2. 设置提醒声音，10s以内</P>
     <div class="prompt-sound-container">
         <button class="prompt-sound-btn" @touchend="playVoice"></button>
-        <div class="sound-bar" @touchstart="startRecord" @touchend="stopRecord">按住录音</div>
+        <div class="sound-bar" :class="{active: is_sound_bar_active}" @touchstart="startRecord" @touchend="stopRecord">{{sound_bar_text}}</div>
     </div>
 </div>
 </template>
@@ -16,7 +16,9 @@ import * as types from 'store/mutation_types'
 export default {
     data() {
         return {
-            sound: null
+            sound: null,
+            is_sound_bar_active: false,
+            sound_bar_text: '按住录音'
         }
     },
     computed: { ...mapState({
@@ -25,9 +27,13 @@ export default {
     },
     methods: {
         startRecord() {
-            wx.startRecord();
+            this.is_sound_bar_active = true
+            this.sound_bar_text = '正在录音'
+            wx.startRecord()
         },
         stopRecord() {
+            this.is_sound_bar_active = false
+            this.sound_bar_text = '按住录音'
             wx.stopRecord({
                 success: res => {
                     this.$store.commit(types.SET_MEDICAL_INSTANCE_BOX_PROMPT_SOUND, 'local ' + res.localId)
@@ -77,8 +83,8 @@ export default {
     overflow: hidden;
     .prompt-sound-btn {
         float: right;
-        width: 20px;
-        height: 20px;
+        width: 36px;
+        height: 36px;
         background-image: url("~images/prompt_sound.jpg");
         background-size: contain;
         vertical-align: middle;
@@ -91,7 +97,10 @@ export default {
         border-radius: 3px;
         margin-right: 20px;
         font-size: 12px;
-        line-height: 20px;
+        line-height: 36px;
+        &:active {
+            background-color: #f0ad4e;
+        }
     }
 }
 </style>
