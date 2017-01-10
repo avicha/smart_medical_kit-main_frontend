@@ -97,7 +97,7 @@ export default {
             this.is_box_schedule_times_setting_popup_shown = false
         },
         request_save_setting() {
-
+            
         },
         save_setting() {
             if (this.setting) {
@@ -111,8 +111,9 @@ export default {
                             isShowProgressTips: 1, // 默认为1，显示进度提示
                             success: (res) => {
                                 let serverId = res.serverId // 返回音频的服务器端ID
-                                alert(serverId)
-                                
+                                this.$store.dispatch('download_weixin_media').then(() => {
+                                    this.request_save_setting()
+                                })
                             }
                         })
                         break
@@ -149,7 +150,7 @@ export default {
 .slideup-leave-active {
     transform: translateY(100%);
 }
-.set-btn {
+.save-btn {
     @extend .bottom-fixed;
     z-index: 10;
     height: 36px;
