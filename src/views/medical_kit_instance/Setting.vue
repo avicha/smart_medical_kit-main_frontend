@@ -99,8 +99,8 @@ export default {
         request_save_setting() {
             this.$store.dispatch('save_medical_kit_instance_setting', {
                 medical_kit_instance_id: this.$route.query.medical_kit_instance_id,
-                setting,
-                box_settings
+                this.setting,
+                this.box_settings
             }).then(json => {
                 if (!json.errcode) {
                     alert('保存设置成功')
