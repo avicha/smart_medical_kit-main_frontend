@@ -105,9 +105,7 @@ const mutations = {
 				prompt_sound
 			}
 		} else {
-			extend(state.detail.setting, {
-				prompt_sound
-			})
+			state.detail.setting.prompt_sound = prompt_sound
 		}
 	},
 	[types.REMOVE_MEDICAL_INSTANCE_BOX_SCHEDULE_TIME](state, {
