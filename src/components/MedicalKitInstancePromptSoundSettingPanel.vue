@@ -16,7 +16,6 @@ import * as types from 'store/mutation_types'
 export default {
     data() {
         return {
-            sound: null,
             is_sound_bar_active: false,
             sound_bar_text: '按住录音'
         }
@@ -47,31 +46,18 @@ export default {
                 let content = tmp[1].trim()
                 switch (type) {
                     case 'src':
-                        this.sound && this.sound.play()
+                        let audio = new Audio()
+                        audio.addEventListener('canplaythrough', () => {
+                            console.debug('audio loaded: ' + content)
+                        })
+                        audio.src = content
+                        audio.play()
                         break
                     case 'local':
                         wx.playVoice({
                             localId: content
                         })
                         break;
-                }
-            }
-        }
-    },
-    watch: {
-        setting() {
-            if (this.setting && this.setting.prompt_sound) {
-                let tmp = this.setting.prompt_sound.split(' ')
-                let type = tmp[0].trim()
-                let content = tmp[1].trim()
-                switch (type) {
-                    case 'src':
-                        let audio = new Audio()
-                        audio.addEventListener('canplaythrough', () => {
-                            console.debug('audio loaded' + content)
-                        })
-                        audio.src = content
-                        this.sound = audio
                 }
             }
         }

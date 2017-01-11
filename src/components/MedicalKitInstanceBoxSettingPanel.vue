@@ -5,7 +5,7 @@
         <li class="list-group-item" v-for="(box_setting, index) in box_settings">
             <div class="medical">
                 <span class="index">{{box_setting.box_index}}.</span>
-                <input class="medical_name" v-model="box_setting.medical_name" placeholder="" />
+                <input class="medical_name" @input="update_medical_name(index,$event)" :value="box_setting.medical_name" placeholder="" />
                 <button class="scan-btn" @click="scanQRCode(index)"></button>
                 <button class="schedule-btn" @click="show_box_schedule_times_setting_popup(index)"></button>
             </div>
@@ -36,6 +36,15 @@ export default {
         })
     },
     methods: {
+        update_medical_name(index, e) {
+            let medical_name = e.target.value
+            this.$store.commit(types.SET_MEDICAL_INSTANCE_BOX_MEDICAL, {
+                index,
+                medical: {
+                    medical_name
+                }
+            })
+        },
         get_medical_by_barcode(index, barcode) {
             this.$store.dispatch('medical_scan', {
                 barcode
