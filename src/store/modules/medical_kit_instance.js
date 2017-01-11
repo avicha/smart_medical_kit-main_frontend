@@ -40,7 +40,7 @@ const actions = {
 	download_weixin_media({
 		commit
 	}, media_id) {
-		Service.download_weixin_media(media_id).then(json => {
+		return Service.download_weixin_media(media_id).then(json => {
 			if (json.errcode) {
 				commit(types.RECEIVE_ERROR, json)
 			} else {
@@ -76,7 +76,6 @@ const mutations = {
 	}) {
 		state.detail = result
 		state.schedule_times = union.apply(this, map(result.box_settings, box_setting => box_setting.schedule_times))
-		alert('receive detail')
 	},
 	[types.SET_MEDICAL_INSTANCE_BOX_SETTING_INDEX](state, {
 		index
@@ -152,7 +151,6 @@ const mutations = {
 		result
 	}) {
 		state.detail.setting.prompt_sound = 'src ' + result
-		alert('我在设置声音的值')
 	}
 }
 export default {

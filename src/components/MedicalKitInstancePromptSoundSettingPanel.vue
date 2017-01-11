@@ -47,7 +47,7 @@ export default {
                 let content = tmp[1].trim()
                 switch (type) {
                     case 'src':
-                        this.sound.play()
+                        this.sound && this.sound.play()
                         break
                     case 'local':
                         wx.playVoice({
@@ -58,18 +58,20 @@ export default {
             }
         }
     },
-    mounted() {
-        if (this.setting && this.setting.prompt_sound) {
-            let tmp = this.setting.prompt_sound.split(' ')
-            let type = tmp[0].trim()
-            let content = tmp[1].trim()
-            switch (type) {
-                case 'src':
-                    let audio = new Audio()
-                    audio.addEventListener('canplaythrough', () => {
-                        this.sound = audio
-                    })
-                    audio.src = content
+    watch: {
+        setting() {
+            if (this.setting && this.setting.prompt_sound) {
+                let tmp = this.setting.prompt_sound.split(' ')
+                let type = tmp[0].trim()
+                let content = tmp[1].trim()
+                switch (type) {
+                    case 'src':
+                        let audio = new Audio()
+                        audio.addEventListener('canplaythrough', () => {
+                            this.sound = audio
+                        })
+                        audio.src = content
+                }
             }
         }
     }
