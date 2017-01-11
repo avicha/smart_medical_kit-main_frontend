@@ -2,6 +2,8 @@ import * as types from '../mutation_types'
 import MedicalKitInstanceModel from 'api/medical_kit_instance'
 import Service from 'api/service'
 import extend from 'lodash/extend'
+import union from 'lodash/union'
+import map from 'lodash/map'
 
 const state = {
 	detail: {
@@ -73,6 +75,7 @@ const mutations = {
 		result
 	}) {
 		state.detail = result
+		state.schedule_times = union.apply(this, map(result.box_settings, box_setting => box_setting.schedule_times))
 	},
 	[types.SET_MEDICAL_INSTANCE_BOX_SETTING_INDEX](state, {
 		index
