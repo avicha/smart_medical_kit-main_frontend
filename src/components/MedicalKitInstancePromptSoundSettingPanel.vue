@@ -68,9 +68,10 @@ export default {
                     case 'src':
                         let audio = new Audio()
                         audio.addEventListener('canplaythrough', () => {
-                            this.sound = audio
+                            console.debug('audio loaded' + content)
                         })
                         audio.src = content
+                        this.sound = audio
                 }
             }
         }
