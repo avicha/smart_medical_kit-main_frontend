@@ -147,8 +147,10 @@ const mutations = {
 	}) {
 		extend(state.detail.box_settings[index], medical)
 	},
-	[types.RECEIVE_MEDICAL_KIT_INSTANCE_PROMPT_SOUND](state, prompt_sound) {
-		state.detail.setting.prompt_sound = 'src ' + prompt_sound
+	[types.RECEIVE_MEDICAL_KIT_INSTANCE_PROMPT_SOUND](state, {
+		result
+	}) {
+		state.detail.setting.prompt_sound = 'src ' + result
 	}
 }
 export default {
