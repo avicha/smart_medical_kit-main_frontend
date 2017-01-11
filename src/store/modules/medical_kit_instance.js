@@ -37,18 +37,6 @@ const actions = {
 			return json
 		})
 	},
-	download_weixin_media({
-		commit
-	}, media_id) {
-		return Service.download_weixin_media(media_id).then(json => {
-			if (json.errcode) {
-				commit(types.RECEIVE_ERROR, json)
-			} else {
-				commit(types.RECEIVE_MEDICAL_KIT_INSTANCE_PROMPT_SOUND, json)
-			}
-			return json
-		})
-	},
 	save_medical_kit_instance_setting({
 		commit
 	}, {
@@ -75,7 +63,7 @@ const mutations = {
 		result
 	}) {
 		state.detail = result
-		state.schedule_times = union.apply(this, map(result.box_settings, box_setting => box_setting.schedule_times))
+		state.schedule_times = union.apply(this, map(result.box_settings, box_setting => box_setting.schedule_times)).sort()
 	},
 	[types.SET_MEDICAL_INSTANCE_BOX_SETTING_INDEX](state, {
 		index
@@ -145,11 +133,6 @@ const mutations = {
 	}) {
 		extend(state.detail.box_settings[index], medical)
 	},
-	[types.RECEIVE_MEDICAL_KIT_INSTANCE_PROMPT_SOUND](state, {
-		result
-	}) {
-		state.detail.setting.prompt_sound = 'src ' + result
-	}
 }
 export default {
 	state,

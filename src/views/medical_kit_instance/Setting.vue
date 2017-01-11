@@ -119,8 +119,11 @@ export default {
                             isShowProgressTips: 1, // 默认为1，显示进度提示
                             success: (res) => {
                                 let serverId = res.serverId // 返回音频的服务器端ID
-                                this.$store.dispatch('download_weixin_media', serverId).then(() => {
-                                    this.request_save_setting()
+                                this.$store.dispatch('download_weixin_media', serverId).then(json => {
+                                    if(!json.errcode){
+                                        this.$store.commit(types.SET_MEDICAL_INSTANCE_BOX_PROMPT_SOUND, 'src ' + json.result)
+                                        this.request_save_setting()
+                                    }
                                 })
                             }
                         })
