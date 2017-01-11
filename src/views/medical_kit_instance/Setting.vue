@@ -97,7 +97,15 @@ export default {
             this.is_box_schedule_times_setting_popup_shown = false
         },
         request_save_setting() {
-            alert(this.setting.prompt_sound)
+            this.$store.dispatch('save_medical_kit_instance_setting', {
+                medical_kit_instance_id: this.$route.query.medical_kit_instance_id,
+                setting,
+                box_settings
+            }).then(json => {
+                if (!json.errcode) {
+                    alert(json.result)
+                }
+            })
         },
         save_setting() {
             if (this.setting) {
