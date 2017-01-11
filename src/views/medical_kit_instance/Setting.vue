@@ -56,6 +56,8 @@ export default {
     mounted() {
         this.$store.dispatch('medical_kit_instance_detail', {
             medical_kit_instance_id: this.$route.query.medical_kit_instance_id
+        }).then(() => {
+            alert('complete')
         })
         this.$store.dispatch('get_weixin_jsapi_params').then(({
             errcode,

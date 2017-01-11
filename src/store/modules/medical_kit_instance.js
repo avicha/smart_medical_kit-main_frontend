@@ -76,6 +76,7 @@ const mutations = {
 	}) {
 		state.detail = result
 		state.schedule_times = union.apply(this, map(result.box_settings, box_setting => box_setting.schedule_times))
+		alert('receive detail')
 	},
 	[types.SET_MEDICAL_INSTANCE_BOX_SETTING_INDEX](state, {
 		index
