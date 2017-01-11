@@ -103,7 +103,7 @@ export default {
                 box_settings
             }).then(json => {
                 if (!json.errcode) {
-                    alert(json.result)
+                    alert('保存设置成功')
                 }
             })
         },
