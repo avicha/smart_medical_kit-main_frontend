@@ -129,9 +129,7 @@ export default {
                         this.request_save_setting()
                 }
             } else {
-                this.setting = {
-                    prompt_sound: 'text 吃药啦'
-                }
+                this.$store.commit(types.SET_MEDICAL_INSTANCE_BOX_PROMPT_SOUND, 'text 吃药啦')
                 this.request_save_setting()
             }
         }

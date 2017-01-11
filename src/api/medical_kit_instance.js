@@ -9,7 +9,7 @@ class MedicalKitInstanceModel extends BaseModel {
 		box_settings
 	}) {
 		return BaseModel.http.post(this.api_prefix + '/' + this.model_name + '/set_setting', {
-			medical_kit_instance_id,
+			medical_kit_instance_id: this.id,
 			setting,
 			box_settings
 		}).then(res => res.json());
