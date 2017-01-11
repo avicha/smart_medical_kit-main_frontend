@@ -151,6 +151,7 @@ const mutations = {
 		result
 	}) {
 		state.detail.setting.prompt_sound = 'src ' + result
+		alert('我在设置声音的值')
 	}
 }
 export default {

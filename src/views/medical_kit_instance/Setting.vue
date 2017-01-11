@@ -97,6 +97,7 @@ export default {
             this.is_box_schedule_times_setting_popup_shown = false
         },
         request_save_setting() {
+            alert('我已经再发起请求了' + this.setting.prompt_sound)
             this.$store.dispatch('save_medical_kit_instance_setting', {
                 medical_kit_instance_id: this.$route.query.medical_kit_instance_id,
                 setting: this.setting,
